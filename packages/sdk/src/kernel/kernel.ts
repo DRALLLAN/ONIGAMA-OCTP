@@ -1,27 +1,47 @@
-import type { IKernel } from "./kernel.interface";
+import type {
+  Agent
+} from "../agent";
 
-import { AgentRegistry } from "./registry/agent.registry";
-import { WorkflowRegistry } from "./registry/workflow.registry";
-import { ToolRegistry } from "./registry/tool.registry";
+import type {
+  ExecutableAgent
+} from "../agent";
 
-import type { Agent } from "../agent";
-import type { Workflow } from "../workflow";
-import type { Tool } from "../mcp";
+import {
+  AgentRegistry,
+  WorkflowRegistry,
+  ToolRegistry
+} from "./registry";
+
+import type {
+  Workflow
+} from "../workflow";
+
+import type {
+  Tool
+} from "../mcp";
+
+import type {
+  IKernel
+} from "./kernel.interface";
 
 
-export class Kernel implements IKernel {
+
+export class Kernel
+implements IKernel {
 
 
-  private readonly agents =
+
+  private agents =
     new AgentRegistry();
 
 
-  private readonly workflows =
+  private workflows =
     new WorkflowRegistry();
 
 
-  private readonly tools =
+  private tools =
     new ToolRegistry();
+
 
 
 
@@ -35,6 +55,7 @@ export class Kernel implements IKernel {
 
 
 
+
   registerWorkflow(
     workflow: Workflow
   ): void {
@@ -42,6 +63,7 @@ export class Kernel implements IKernel {
     this.workflows.register(workflow);
 
   }
+
 
 
 
@@ -55,6 +77,56 @@ export class Kernel implements IKernel {
 
 
 
+
+  getAgent(
+    agentId: string
+  ): ExecutableAgent | undefined {
+
+
+    return this.agents.get(
+      agentId
+    ) as ExecutableAgent | undefined;
+
+
+  }
+
+
+
+
+   async executeAgent(
+  agentId: string,
+  input: unknown
+) {
+
+
+  const agent =
+    this.getAgent(agentId);
+
+
+
+  if (!agent) {
+
+    throw new Error(
+      `Agent ${agentId} not found`
+    );
+
+  }
+
+
+
+  return agent.run(
+    input,
+    {
+      kernel: this
+    } as any
+  );
+
+
+}
+
+
+
+
   async execute(
     workflowId: string,
     input: unknown
@@ -62,7 +134,9 @@ export class Kernel implements IKernel {
 
 
     const workflow =
-      this.workflows.get(workflowId);
+      this.workflows.get(
+        workflowId
+      );
 
 
 
@@ -76,8 +150,43 @@ export class Kernel implements IKernel {
 
 
 
-    return workflow.execute(input);
+    return workflow.execute(
+      input
+    );
+
 
   }
+
+
+
+
+async executeTool(
+  toolId: string,
+  input: unknown
+): Promise<unknown> {
+
+
+  const tool =
+    this.tools.get(toolId);
+
+
+
+  if (!tool) {
+
+    throw new Error(
+      `Tool ${toolId} not found`
+    );
+
+  }
+
+
+
+  return tool.execute(
+    input
+  );
+
+
+}
+
 
 }
