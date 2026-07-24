@@ -1,7 +1,4 @@
-version: "3.9"
-
 services:
-
   postgres:
     image: postgres:17
     container_name: octp-postgres
@@ -11,16 +8,20 @@ services:
       POSTGRES_USER: octp
       POSTGRES_PASSWORD: octp_password
     ports:
-      - "5432:5432"
+      - "15432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    networks:
+      - octp-network
 
   redis:
     image: redis:8-alpine
     container_name: octp-redis
     restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "16379:6379"
+    networks:
+      - octp-network
 
   rabbitmq:
     image: rabbitmq:4-management
@@ -30,8 +31,14 @@ services:
       RABBITMQ_DEFAULT_USER: octp
       RABBITMQ_DEFAULT_PASS: octp_password
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "15673:5672"
+      - "25672:15672"
+    networks:
+      - octp-network
 
 volumes:
   postgres-data:
+
+networks:
+  octp-network:
+    driver: bridge
