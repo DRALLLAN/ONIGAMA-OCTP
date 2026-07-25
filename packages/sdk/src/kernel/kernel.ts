@@ -24,6 +24,18 @@ import type {
   IKernel
 } from "./kernel.interface";
 
+import {
+  InMemoryEventBus
+} from "../core/events";
+
+import type {
+  IEventBus
+} from "../core/events";
+
+import {
+  OCTP_EVENTS
+} from "../core/events";
+
 
 
 export class Kernel
@@ -43,6 +55,28 @@ implements IKernel {
     new ToolRegistry();
 
 
+  private eventBus: IEventBus;
+
+
+  constructor(
+    eventBus?: IEventBus
+  ) {
+
+    this.eventBus =
+      eventBus ?? new InMemoryEventBus();
+
+  }
+
+
+
+
+  getEventBus(): IEventBus {
+
+    return this.eventBus;
+
+  }
+
+
 
 
   registerAgent(
@@ -50,6 +84,11 @@ implements IKernel {
   ): void {
 
     this.agents.register(agent);
+
+    void this.eventBus.emit(
+      OCTP_EVENTS.AGENT_REGISTERED,
+      { agentId: agent.id }
+    );
 
   }
 
@@ -62,6 +101,11 @@ implements IKernel {
 
     this.workflows.register(workflow);
 
+    void this.eventBus.emit(
+      OCTP_EVENTS.WORKFLOW_REGISTERED,
+      { workflowId: workflow.id }
+    );
+
   }
 
 
@@ -72,6 +116,11 @@ implements IKernel {
   ): void {
 
     this.tools.register(tool);
+
+    void this.eventBus.emit(
+      OCTP_EVENTS.TOOL_REGISTERED,
+      { toolId: tool.id }
+    );
 
   }
 
@@ -114,12 +163,33 @@ implements IKernel {
 
 
 
-  return agent.run(
-    input,
-    {
-      kernel: this
-    } as any
-  );
+  try {
+
+    const result =
+      await agent.run(
+        input,
+        {
+          kernel: this
+        } as any
+      );
+
+    await this.eventBus.emit(
+      OCTP_EVENTS.AGENT_EXECUTED,
+      { agentId, input, result }
+    );
+
+    return result;
+
+  } catch (cause) {
+
+    await this.eventBus.emit(
+      OCTP_EVENTS.AGENT_EXECUTION_FAILED,
+      { agentId, input, cause }
+    );
+
+    throw cause;
+
+  }
 
 
 }
@@ -150,9 +220,30 @@ implements IKernel {
 
 
 
-    return workflow.execute(
-      input
-    );
+    try {
+
+      const result =
+        await workflow.execute(
+          input
+        );
+
+      await this.eventBus.emit(
+        OCTP_EVENTS.WORKFLOW_EXECUTED,
+        { workflowId, input, result }
+      );
+
+      return result;
+
+    } catch (cause) {
+
+      await this.eventBus.emit(
+        OCTP_EVENTS.WORKFLOW_EXECUTION_FAILED,
+        { workflowId, input, cause }
+      );
+
+      throw cause;
+
+    }
 
 
   }
@@ -181,9 +272,30 @@ async executeTool(
 
 
 
-  return tool.execute(
-    input
-  );
+  try {
+
+    const result =
+      await tool.execute(
+        input
+      );
+
+    await this.eventBus.emit(
+      OCTP_EVENTS.TOOL_EXECUTED,
+      { toolId, input, result }
+    );
+
+    return result;
+
+  } catch (cause) {
+
+    await this.eventBus.emit(
+      OCTP_EVENTS.TOOL_EXECUTION_FAILED,
+      { toolId, input, cause }
+    );
+
+    throw cause;
+
+  }
 
 
 }

@@ -16,6 +16,9 @@ export const TOKENS = {
     Symbol("PLANNER"),
 
   EMBEDDING:
-    Symbol("EMBEDDING")
+    Symbol("EMBEDDING"),
+
+  EVENT_BUS:
+    Symbol("EVENT_BUS")
 
 } as const;

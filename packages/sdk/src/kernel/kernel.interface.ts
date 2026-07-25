@@ -4,8 +4,11 @@ import type {
 import type { Agent } from "../agent/agent.interface";
 import type { Workflow } from "../workflow/workflow.interface";
 import type { Tool } from "../mcp/tool.interface";
+import type { IEventBus } from "../core/events";
 
 export interface IKernel {
+
+  getEventBus(): IEventBus;
 
   registerAgent(agent: Agent): void;
 
