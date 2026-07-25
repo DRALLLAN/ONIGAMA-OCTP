@@ -72,4 +72,22 @@ implements MemoryAdapter {
   }
 
 
+
+  async delete(
+    agentId: string,
+    key: string
+  ): Promise<void> {
+
+
+    this.records =
+      this.records.filter(
+        item =>
+          !(item.agentId === agentId &&
+            item.key === key)
+      );
+
+
+  }
+
+
 }

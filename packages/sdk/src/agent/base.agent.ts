@@ -1,10 +1,11 @@
 import type { Agent } from "./agent.interface";
 import type { AgentContext } from "./agent.context";
 import type { AgentResult } from "./agent.result";
+import type { ExecutableAgent } from "./executable-agent.interface";
 
 
 export abstract class BaseAgent
-implements Agent {
+implements Agent, ExecutableAgent {
 
 
   abstract id: string;
@@ -17,56 +18,16 @@ implements Agent {
     input: unknown
   ): Promise<AgentResult> {
 
-
-    const context: AgentContext = {
-
-      agentId: this.id,
-
-      input
-
-    };
-
-
-    try {
-
-      const result =
-        await this.run(context);
-
-
-      return {
-
-        success: true,
-
-        data: result
-
-      };
-
-
-    } catch(error) {
-
-
-      return {
-
-        success: false,
-
-        error:
-          error instanceof Error
-          ? error.message
-          : "Unknown error"
-
-      };
-
-
-    }
-
+    return this.run(input);
 
   }
 
 
 
-  protected abstract run(
-    context: AgentContext
-  ): Promise<unknown>;
+  abstract run(
+    input: unknown,
+    context?: AgentContext
+  ): Promise<AgentResult>;
 
 
 }

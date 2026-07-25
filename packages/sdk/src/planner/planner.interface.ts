@@ -1,3 +1,6 @@
+import type { PlanResult } from "./plan.result";
+
+
 export interface Planner {
 
 

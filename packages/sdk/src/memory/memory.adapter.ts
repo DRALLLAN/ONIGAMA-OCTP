@@ -24,4 +24,11 @@ export interface MemoryAdapter {
   ): Promise<MemoryRecord[]>;
 
 
+
+  delete(
+    agentId: string,
+    key: string
+  ): Promise<void>;
+
+
 }

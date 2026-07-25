@@ -1,4 +1,4 @@
-import { Workflow } from "./workflow";
+import type { Workflow } from "./workflow.interface";
 import type { ExecutionContext } from "./execution.context";
 
 
@@ -9,7 +9,7 @@ export class WorkflowRuntime {
     context: ExecutionContext
   ): Promise<ExecutionContext> {
 
-    return workflow.execute(context);
+    return (await workflow.execute(context)) as ExecutionContext;
 
   }
 

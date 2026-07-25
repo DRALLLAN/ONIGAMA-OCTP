@@ -1,25 +1,29 @@
-import type { Memory } from "./memory.interface";
+import type { MemoryAdapter } from "./memory.adapter";
 
 
 export class MemoryRuntime {
 
 
   constructor(
-    private memory: Memory
+    private adapter: MemoryAdapter
   ) {}
 
 
 
   async remember(
+    agentId: string,
     key: string,
     value: unknown
   ): Promise<void> {
 
 
-    await this.memory.set(
+    await this.adapter.save({
+      id: `${agentId}:${key}:${Date.now()}`,
+      agentId,
       key,
-      value
-    );
+      value,
+      createdAt: new Date()
+    });
 
 
   }
@@ -27,13 +31,18 @@ export class MemoryRuntime {
 
 
   async recall<T = unknown>(
+    agentId: string,
     key: string
   ): Promise<T | undefined> {
 
 
-    return this.memory.get<T>(
-      key
-    );
+    const record =
+      await this.adapter.get(
+        agentId,
+        key
+      );
+
+    return record?.value as T | undefined;
 
 
   }
@@ -41,11 +50,13 @@ export class MemoryRuntime {
 
 
   async forget(
+    agentId: string,
     key: string
   ): Promise<void> {
 
 
-    await this.memory.delete(
+    await this.adapter.delete(
+      agentId,
       key
     );
 

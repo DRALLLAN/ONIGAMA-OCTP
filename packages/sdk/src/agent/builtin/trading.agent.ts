@@ -10,6 +10,10 @@ import type {
   AgentResult
 } from "../agent.result";
 
+import type {
+  KernelContext
+} from "../kernel.context";
+
 import {
   MarketAnalysisAgent
 } from "./market-analysis.agent";
@@ -49,7 +53,7 @@ extends BaseAgent {
 
   override async run(
     input: unknown,
-    context?: AgentContext
+    context?: AgentContext & KernelContext
   ): Promise<AgentResult> {
 
 

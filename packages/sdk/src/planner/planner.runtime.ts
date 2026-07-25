@@ -1,5 +1,5 @@
-import type { Plan } from "./plan.interface";
 import type { Planner } from "./planner.interface";
+import type { PlanResult } from "./plan.result";
 
 
 export class PlannerRuntime {
@@ -13,10 +13,10 @@ export class PlannerRuntime {
 
   async create(
     input: unknown
-  ): Promise<Plan> {
+  ): Promise<PlanResult> {
 
 
-    return this.planner.create(
+    return this.planner.createPlan(
       input
     );
 

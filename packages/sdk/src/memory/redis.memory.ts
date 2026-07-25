@@ -131,4 +131,27 @@ implements MemoryAdapter {
   }
 
 
+
+  async delete(
+    agentId: string,
+    key: string
+  ): Promise<void> {
+
+
+    await this.redis.connect();
+
+
+    await this.redis
+      .getClient()
+      .del(
+        this.key(
+          agentId,
+          key
+        )
+      );
+
+
+  }
+
+
 }

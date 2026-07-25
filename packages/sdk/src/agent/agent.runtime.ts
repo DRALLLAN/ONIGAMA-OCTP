@@ -20,9 +20,8 @@ import type {
 
 
 import {
-  MemoryStore,
-  MemoryRuntime
-} from "../memory";
+  loadConfig
+} from "../core/config";
 
 
 
@@ -32,7 +31,7 @@ export class AgentRuntime {
 
 private memoryRuntime =
   new MemoryRuntime(
-    process.env.NODE_ENV === "production"
+    loadConfig().env === "production"
       ? new RedisMemoryStore()
       : new MemoryStore()
   );
