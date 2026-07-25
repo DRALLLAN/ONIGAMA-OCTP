@@ -3,6 +3,10 @@ import {
   RedisClientType
 } from "redis";
 
+import {
+  loadConfig
+} from "../core/config";
+
 
 
 export class RedisMemoryClient {
@@ -14,23 +18,23 @@ export class RedisMemoryClient {
 
 
 
-  constructor() {
+  constructor(
+    redisUrl?: string
+  ) {
 
 
     this.client =
       createClient({
 
         url:
-          process.env.REDIS_URL ??
-          "redis://localhost:6379"
+          redisUrl ??
+          loadConfig().redis.url
 
       });
 
 
 
   }
-
-
 
 
 
@@ -47,8 +51,6 @@ export class RedisMemoryClient {
 
 
   }
-
-
 
 
 
