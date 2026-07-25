@@ -2,12 +2,20 @@ import {
   OCTPRuntime
 } from "./octp.runtime";
 
+import type {
+  ServiceContainer
+} from "../core/container";
 
 
-export function createOCTPRuntime() {
+
+export function createOCTPRuntime(
+  container?: ServiceContainer
+) {
 
 
-  return new OCTPRuntime();
+  return new OCTPRuntime(
+    container
+  );
 
 
 }

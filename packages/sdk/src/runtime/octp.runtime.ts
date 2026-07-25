@@ -25,6 +25,17 @@ import {
 } from "../planner";
 
 
+import {
+  ServiceContainer,
+  TOKENS
+} from "../core/container";
+
+
+import {
+  buildOCTPContainer
+} from "./container.factory";
+
+
 
 export class OCTPRuntime {
 
@@ -33,15 +44,15 @@ export class OCTPRuntime {
   readonly kernel: Kernel;
 
 
+  private container: ServiceContainer;
+
 
   private workflowEngine:
     WorkflowEngine;
 
 
-
   private planner:
     OCTPPlanner;
-
 
 
   private workflows =
@@ -49,31 +60,29 @@ export class OCTPRuntime {
 
 
 
+  constructor(
+    container: ServiceContainer = buildOCTPContainer()
+  ) {
 
-
-  constructor() {
-
+    this.container = container;
 
     this.kernel =
-      new Kernel();
+      container.resolve<Kernel>(
+        TOKENS.KERNEL
+      );
 
-
+    this.planner =
+      container.resolve<OCTPPlanner>(
+        TOKENS.PLANNER
+      );
 
     this.workflowEngine =
       new WorkflowEngine();
 
 
-
-    this.planner =
-      new OCTPPlanner();
-
-
-
     this.registerTools();
 
-
     this.registerAgents();
-
 
     this.registerWorkflows();
 
@@ -81,6 +90,12 @@ export class OCTPRuntime {
   }
 
 
+
+  getContainer(): ServiceContainer {
+
+    return this.container;
+
+  }
 
 
 
@@ -96,8 +111,6 @@ export class OCTPRuntime {
 
 
 
-
-
   private registerAgents() {
 
 
@@ -106,15 +119,12 @@ export class OCTPRuntime {
     );
 
 
-
     this.kernel.registerAgent(
       new RiskAgent()
     );
 
 
   }
-
-
 
 
 
@@ -127,7 +137,6 @@ export class OCTPRuntime {
       );
 
 
-
     this.workflows.set(
       "trading-workflow",
       tradingWorkflow
@@ -135,8 +144,6 @@ export class OCTPRuntime {
 
 
   }
-
-
 
 
 
@@ -153,8 +160,6 @@ export class OCTPRuntime {
 
 
   }
-
-
 
 
 
@@ -184,7 +189,6 @@ export class OCTPRuntime {
 
 
 
-
     return this.workflowEngine.execute(
       workflow as any,
       input
@@ -192,10 +196,6 @@ export class OCTPRuntime {
 
 
   }
-
-
-
-
 
 
 
@@ -212,12 +212,9 @@ export class OCTPRuntime {
 
 
 
-
-
     if (
       plan.type === "agent"
     ) {
-
 
 
       return this.executeAgent(
@@ -230,12 +227,9 @@ export class OCTPRuntime {
 
 
 
-
-
     if (
       plan.type === "workflow"
     ) {
-
 
 
       return this.executeWorkflow(
@@ -245,8 +239,6 @@ export class OCTPRuntime {
 
 
     }
-
-
 
 
 
