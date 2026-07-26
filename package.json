@@ -9,12 +9,12 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "lint": "turbo run lint",
-    "test": "turbo run test",
+    "dev": "nx run-many -t dev",
+    "build": "nx run-many -t build",
+    "lint": "nx run-many -t lint",
+    "test": "nx run-many -t test",
     "format": "prettier --write .",
-    "clean": "turbo run clean"
+    "clean": "nx run-many -t clean"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
