@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - docs/enterprise-documentation
+  pull_request:
+    branches:
+      - main
+      - docs/enterprise-documentation
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable Corepack (pnpm via packageManager field)
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: npx nx run-many -t lint --output-style=stream
+
+      - name: Test
+        run: npx nx run-many -t test --output-style=stream
+
+      - name: Build
+        run: npx nx run-many -t build --output-style=stream
+
+      # This step exists because 'nx build' can succeed with exit code 0
+      # while silently emitting zero compiled files -- exactly what
+      # happened with packages/sdk's tsconfig for an unknown length of
+      # time before it was caught by hand. A green build step alone does
+      # not prove anything was actually compiled; this does.
+      - name: Verify build actually emitted compiled output
+        run: |
+          set -e
+          failed=0
+          for dist_dir in dist/packages/sdk dist/apps/gateway; do
+            if [ ! -d "$dist_dir" ]; then
+              echo "::error::$dist_dir does not exist -- build did not run for this project"
+              failed=1
+              continue
+            fi
+            count=$(find "$dist_dir" -name "*.js" | wc -l)
+            echo "$dist_dir: $count compiled .js files"
+            if [ "$count" -eq 0 ]; then
+              echo "::error::$dist_dir has zero compiled .js files -- the build silently produced nothing"
+              failed=1
+            fi
+          done
+          exit $failed

@@ -1,200 +1,333 @@
 # OCTP
-## Onigama Cognitive Trading Platform
 
-> Build the world's most trusted AI-native Trading Intelligence Platform.
+> **Open Cognitive Trading Platform**
 
----
-
-## Vision
-
-OCTP is an AI-native platform designed to help traders make better decisions through explainable artificial intelligence, structured market analysis, cognitive memory, and institutional-grade trading intelligence.
-
-Unlike traditional trading assistants, OCTP is built around reasoning, evidence, workflows, and knowledge rather than simple prompt-response interactions.
+Enterprise AI Runtime for Intelligent Trading Systems
 
 ---
 
-## Mission
+# Vision
 
-Our mission is to create an AI platform that:
+OCTP (Open Cognitive Trading Platform) is an AI-native runtime designed for building autonomous trading intelligence systems.
 
-- Thinks before answering
-- Explains every decision
-- Learns from trader behavior
-- Improves trading discipline
-- Provides transparent market intelligence
-- Evolves continuously through modular skills
+Unlike traditional trading platforms that focus only on execution, OCTP is designed around reasoning, planning, memory, workflow orchestration, and explainable decision making.
+
+Large Language Models (LLMs) are treated as interchangeable components. Business logic remains independent from any specific AI provider.
 
 ---
 
-## Core Principles
+# Mission
 
-- AI Native
-- Explainable AI
-- Evidence First
-- Modular Architecture
-- Multi-LLM Compatible
-- MCP Compatible
-- Enterprise Ready
-- Cloud Native
+Build a modular, scalable, enterprise-grade AI runtime capable of powering:
 
----
-
-## Project Architecture
-
-OCTP consists of three major products.
-
-### OCTP Core
-
-The cognitive operating system.
-
-Includes:
-
-- AI Kernel
-- Memory Engine
-- Workflow Engine
-- Planner
-- Reasoner
-- Decision Engine
-- Skill Runtime
-- MCP Runtime
+* Trading Intelligence
+* Portfolio Management
+* Risk Analysis
+* Market Research
+* Financial Automation
+* AI Agents
+* Workflow Automation
+* Multi-Agent Collaboration
 
 ---
 
-### OCTP Trading Intelligence
+# Core Principles
 
-Domain knowledge and trading intelligence.
-
-Includes:
-
-- Smart Money Engine
-- LET Engine
-- Risk Engine
-- News Intelligence
-- Journal Intelligence
-- Psychology Engine
-- Portfolio Intelligence
+* AI First
+* Event Driven
+* Modular Architecture
+* Explainable Decisions
+* Provider Agnostic
+* Enterprise Ready
+* Testable
+* Observable
+* Extensible
 
 ---
 
-### OCTP Cloud
+# Architecture Overview
 
-Cloud infrastructure and enterprise services.
+```
+                Client Applications
 
-Includes:
+     Flutter | Web | Admin | AI Console
 
-- Authentication
-- Licensing
-- Marketplace
-- Analytics
-- Monitoring
-- Billing
+                     │
+
+                     ▼
+
+               API Gateway
+
+                     │
+
+                     ▼
+
+               OCTP Runtime
+
+                     │
+
+      ┌──────────────┼──────────────┐
+
+      ▼              ▼              ▼
+
+   Kernel        Planner      Workflow
+
+                     │
+
+                     ▼
+
+               Agent Runtime
+
+                     │
+
+      ┌──────────────┼──────────────┐
+
+      ▼              ▼              ▼
+
+ Tool Runtime   Memory Engine   Event Bus
+
+                     │
+
+         ┌───────────┼─────────────┐
+
+         ▼           ▼             ▼
+
+      Redis      Vector Store   Embedding
+
+                     │
+
+                     ▼
+
+             Semantic Recall
+```
 
 ---
 
-## Technology Stack
+# Main Components
 
-Backend
+## Kernel
 
-- TypeScript
-- NestJS
+The Kernel is the heart of OCTP.
 
-Frontend
+Responsibilities:
 
-- Next.js
-- Flutter
-
-Infrastructure
-
-- Docker
-- Kubernetes
-- GitHub Actions
-
-Databases
-
-- PostgreSQL
-- Redis
-- Qdrant
-- OpenSearch
-
-Messaging
-
-- RabbitMQ
-
-AI
-
-- MCP
-- Multi-LLM Provider
-- OpenAI
-- Gemini
-- Claude
-- Local Models
+* Runtime lifecycle
+* Agent execution
+* Tool execution
+* Workflow execution
+* Dependency management
 
 ---
 
-## Repository Structure
+## Planner
 
-docs/
+Responsible for:
+
+* Goal decomposition
+* Planning
+* Task sequencing
+* Decision orchestration
+
+---
+
+## Workflow Engine
+
+Responsible for deterministic execution.
+
+Features:
+
+* Sequential workflows
+* Conditional execution
+* Retry support
+* Context propagation
+
+---
+
+## Agent Runtime
+
+Provides:
+
+* Agent lifecycle
+* Memory access
+* Tool access
+* Planning support
+* Explainable execution
+
+---
+
+## Memory System
+
+OCTP provides multiple memory implementations.
+
+* In-Memory
+* Redis
+* Vector Memory
+* Semantic Recall
+
+---
+
+## Embedding Layer
+
+Supports semantic understanding.
+
+Current capabilities:
+
+* Embedding generation
+* Similarity search
+* Semantic retrieval
+
+Future providers:
+
+* OpenAI
+* Azure OpenAI
+* Ollama
+* HuggingFace
+* Local Models
+
+---
+
+## Tool Runtime
+
+Agents interact with the outside world through tools.
+
+Examples:
+
+* Market Data
+* Risk Calculator
+* Broker APIs
+* News Providers
+* Portfolio Analysis
+
+---
+
+# Current Status
+
+Current SDK Version
+
+```
+v0.1.x
+```
+
+Completed
+
+* Kernel
+* Runtime
+* Planner
+* Workflow Engine
+* Agent Runtime
+* Tool Runtime
+* Memory Runtime
+* Redis Memory
+* Vector Memory
+* Embedding
+* Semantic Recall
+* Error Framework
+* Logger
+* Dependency Injection
+
+In Progress
+
+* Event Bus
+* Configuration
+* Registry
+
+Planned
+
+* Multi-Agent Runtime
+* Plugin SDK
+* Distributed Runtime
+* LLM Runtime
+* Enterprise Monitoring
+
+---
+
+# Repository Structure
+
+```
 apps/
 packages/
-services/
-infrastructure/
-tests/
-scripts/
+docs/
+
+packages/sdk/
+
+agent/
+kernel/
+planner/
+workflow/
+memory/
+embedding/
+runtime/
+mcp/
+core/
+```
 
 ---
 
-## Development Philosophy
+# Documentation
 
-Documentation First
+Detailed documentation is available in the `docs/` directory.
 
-Architecture First
-
-Tests First
-
-Code Second
-
----
-
-## Branch Strategy
-
-main
-
-develop
-
-feature/*
-
-release/*
-
-hotfix/*
+* Architecture
+* Runtime
+* AI
+* Infrastructure
+* ADR
+* Roadmap
 
 ---
 
-## Versioning
+# Development Philosophy
 
-Semantic Versioning
+Business logic must never depend on infrastructure.
 
-Current Version
+Infrastructure can change.
 
-0.1.0-alpha
+Business logic should not.
 
----
+All dependencies are resolved through Dependency Injection.
 
-## Status
+All cross-module communication should occur through the Event Bus.
 
-Current Phase
-
-Foundation
-
-Current Sprint
-
-Sprint 1
+Every public API must have automated tests.
 
 ---
 
-## License
+# Roadmap
 
-Private
+v0.1.x
 
-Copyright © Onigama
+Core Stabilization
 
-All Rights Reserved.
+v0.2.x
+
+Multi-Agent Runtime
+
+v0.3.x
+
+LLM Runtime
+
+v0.4.x
+
+Plugin SDK
+
+v1.0.0
+
+Enterprise Release
+
+---
+
+# Contributing
+
+Contributions are welcome.
+
+Please read the documentation before submitting pull requests.
+
+Follow the coding standards and architecture rules defined in the `docs/` directory.
+
+---
+
+# License
+
+Copyright © ONIGAMA
+
+All rights reserved.

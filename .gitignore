@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Nx
+.nx/
+dist/
+
+# Build
+coverage/
+*.log
+
+# Environment
+.env
+.env.*
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
