@@ -4,3 +4,4 @@ export * from "./tool.error";
 export * from "./kernel.error";
 export * from "./planner.error";
 export * from "./event.error";
+export * from "./registry.error";

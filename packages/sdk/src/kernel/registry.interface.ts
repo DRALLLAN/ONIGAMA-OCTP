@@ -5,6 +5,11 @@ export interface Registry<T> {
   ): void;
 
 
+  unregister(
+    id: string
+  ): boolean;
+
+
   get(
     id: string
   ): T | undefined;

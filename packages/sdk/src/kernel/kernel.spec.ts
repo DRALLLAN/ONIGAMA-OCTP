@@ -136,4 +136,58 @@ describe('Kernel + EventBus integration', () => {
       input: { price: 2385 }
     });
   });
+
+  it('throws when registering an agent id that is already registered', () => {
+    const kernel = new Kernel();
+
+    kernel.registerAgent(createEchoAgent());
+
+    expect(() => kernel.registerAgent(createEchoAgent())).toThrow(
+      /already registered/
+    );
+  });
+
+  it('throws when registering a duplicate tool id', () => {
+    const kernel = new Kernel();
+
+    kernel.registerTool(createEchoTool());
+
+    expect(() => kernel.registerTool(createEchoTool())).toThrow(
+      /already registered/
+    );
+  });
+
+  it('unregisterAgent removes the agent, emits agent.unregistered, and allows re-registering', async () => {
+    const kernel = new Kernel();
+    const events: unknown[] = [];
+
+    kernel.getEventBus().on(OCTP_EVENTS.AGENT_UNREGISTERED, (e) => {
+      events.push(e.payload);
+    });
+
+    kernel.registerAgent(createEchoAgent());
+
+    expect(kernel.unregisterAgent('echo-agent')).toBe(true);
+    expect(kernel.getAgent('echo-agent')).toBeUndefined();
+
+    await Promise.resolve();
+    expect(events).toEqual([{ agentId: 'echo-agent' }]);
+
+    // now that it's gone, re-registering the same id must not throw
+    expect(() => kernel.registerAgent(createEchoAgent())).not.toThrow();
+  });
+
+  it('unregisterAgent returns false and does not emit for an unknown id', async () => {
+    const kernel = new Kernel();
+    const events: unknown[] = [];
+
+    kernel.getEventBus().on(OCTP_EVENTS.AGENT_UNREGISTERED, (e) => {
+      events.push(e.payload);
+    });
+
+    expect(kernel.unregisterAgent('does-not-exist')).toBe(false);
+
+    await Promise.resolve();
+    expect(events).toHaveLength(0);
+  });
 });

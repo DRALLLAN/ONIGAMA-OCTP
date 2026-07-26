@@ -12,9 +12,15 @@ export interface IKernel {
 
   registerAgent(agent: Agent): void;
 
+  unregisterAgent(agentId: string): boolean;
+
   registerWorkflow(workflow: Workflow): void;
 
+  unregisterWorkflow(workflowId: string): boolean;
+
   registerTool(tool: Tool): void;
+
+  unregisterTool(toolId: string): boolean;
 
   execute(
     workflowId: string,

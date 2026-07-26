@@ -95,6 +95,29 @@ implements IKernel {
 
 
 
+  unregisterAgent(
+    agentId: string
+  ): boolean {
+
+    const removed =
+      this.agents.unregister(agentId);
+
+    if (removed) {
+
+      void this.eventBus.emit(
+        OCTP_EVENTS.AGENT_UNREGISTERED,
+        { agentId }
+      );
+
+    }
+
+    return removed;
+
+  }
+
+
+
+
   registerWorkflow(
     workflow: Workflow
   ): void {
@@ -111,6 +134,29 @@ implements IKernel {
 
 
 
+  unregisterWorkflow(
+    workflowId: string
+  ): boolean {
+
+    const removed =
+      this.workflows.unregister(workflowId);
+
+    if (removed) {
+
+      void this.eventBus.emit(
+        OCTP_EVENTS.WORKFLOW_UNREGISTERED,
+        { workflowId }
+      );
+
+    }
+
+    return removed;
+
+  }
+
+
+
+
   registerTool(
     tool: Tool
   ): void {
@@ -121,6 +167,29 @@ implements IKernel {
       OCTP_EVENTS.TOOL_REGISTERED,
       { toolId: tool.id }
     );
+
+  }
+
+
+
+
+  unregisterTool(
+    toolId: string
+  ): boolean {
+
+    const removed =
+      this.tools.unregister(toolId);
+
+    if (removed) {
+
+      void this.eventBus.emit(
+        OCTP_EVENTS.TOOL_UNREGISTERED,
+        { toolId }
+      );
+
+    }
+
+    return removed;
 
   }
 
